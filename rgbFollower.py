@@ -21,7 +21,7 @@ async def connect():
 
 
 class Direction(Enum):
-    IDLE = auto()
+    STOP = auto()
     FORWARD = auto()
     LEFT = auto()
     RIGHT = auto()
@@ -45,9 +45,9 @@ async def move_to_color(frame, vis, detector_name) -> Direction:
     r_det = await vis.get_detections(r_frame, detector_name)
 
     if not (r_det or l_det):
-        return Direction.IDLE
+        return Direction.STOP
 
-    # color detected in either right or left; choose larger of the two
+    # color detected in either right, left, or both; choose the section with the larger blue area
     _max = max([r_det, l_det], key=lambda d: (d[0].x_max - d[0].x_min) * (d[0].y_max - d[0].y_min) if d else 0)
     return Direction.LEFT if _max == l_det else Direction.RIGHT
 
@@ -76,7 +76,7 @@ async def main():
             elif Direction.RIGHT is direction:
                 await base.set_power(Vector3(), Vector3(z=-angular_power))
             else:
-                assert Direction.IDLE is direction
+                assert Direction.STOP is direction
                 break
     finally:
         await base.stop()
