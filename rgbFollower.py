@@ -52,14 +52,6 @@ async def move_to_color(frame, vis, detector_name) -> Direction:
     return Direction.LEFT if _sorted[-1] == l_det else Direction.RIGHT
 
 
-async def stop_robot(robot):
-    """
-    Stop the robot's motion.
-    """
-    base = Base.from_robot(robot, "base")
-    await base.stop()
-
-
 async def main():
     """
     Main line follower function.
@@ -87,7 +79,7 @@ async def main():
                 assert Direction.IDLE is direction
                 break
     finally:
-        await stop_robot(robot)
+        await base.stop()
         await robot.close()
 
 
