@@ -48,8 +48,8 @@ async def move_to_color(frame, vis, detector_name) -> Direction:
         return Direction.IDLE
 
     # color detected in either right or left; choose larger of the two
-    _sorted = sorted([r_det, l_det], key=lambda d: (d[0].x_max - d[0].x_min) * (d[0].y_max - d[0].y_min) if d else 0)
-    return Direction.LEFT if _sorted[-1] == l_det else Direction.RIGHT
+    _max = max([r_det, l_det], key=lambda d: (d[0].x_max - d[0].x_min) * (d[0].y_max - d[0].y_min) if d else 0)
+    return Direction.LEFT if _max == l_det else Direction.RIGHT
 
 
 async def main():
