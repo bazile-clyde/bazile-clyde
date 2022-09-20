@@ -69,9 +69,8 @@ async def main():
     base = Base.from_robot(robot, "base")
     vision = VisionServiceClient.from_robot(robot)
 
-    angle = 30  # when turning, spin the motor this much
-    vel = 1000  # go this fast when moving motor
-    straightNum = 150  # when going straight, spin motor this much
+    linear_power = 0.8
+    angular_power = 0.65
     try:
         while True:
             frame = await camera.get_image()
@@ -79,11 +78,11 @@ async def main():
             print(f'move:{direction}')
 
             if Direction.FORWARD is direction:
-                await base.move_straight(straightNum, vel)
+                await base.set_power(Vector3(y=linear_power), Vector3())
             elif Direction.LEFT is direction:
-                await base.spin(angle, vel)
+                await base.set_power(Vector3(), Vector3(z=angular_power))
             elif Direction.RIGHT is direction:
-                await base.spin(-angle, vel)
+                await base.set_power(Vector3(), Vector3(z=-angular_power))
             else:
                 assert Direction.IDLE is direction
                 break
