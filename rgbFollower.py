@@ -48,7 +48,7 @@ async def move_to_color(frame, vis, detector_name) -> Direction:
         return Direction.STOP
 
     # color detected in either right, left, or both; choose the section with the larger blue area
-    _max = max([r_det, l_det], key=lambda d: (d[0].x_max - d[0].x_min) * (d[0].y_max - d[0].y_min) if d else 0)
+    _max = max([r_det, l_det], key=lambda xy: (xy[0].x_max - xy[0].x_min) * (xy[0].y_max - xy[0].y_min) if xy else 0)
     return Direction.LEFT if _max == l_det else Direction.RIGHT
 
 
